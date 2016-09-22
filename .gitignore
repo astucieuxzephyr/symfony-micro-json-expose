@@ -1,0 +1,5 @@
+/cache
+/vendor
+/bin
+/web/bundles
+composer.lock
