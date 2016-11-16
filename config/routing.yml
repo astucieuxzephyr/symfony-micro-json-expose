@@ -1,0 +1,8 @@
+api_login_check:
+    path: /api/login_check
+
+# dans symfony normal
+# ici les routes sont dans la classe microkernel
+#app:
+#    resource: "@AppBundle/Controller/"
+#    type: annotation

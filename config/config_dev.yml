@@ -1,3 +1,5 @@
+# Pour faire marcher cette config il faut appeler /app_dev.php/nom_route et non app.php/nom_route
+# Cette configuration est appelée dans la fonction configureContainer() du fichier MicroKernel.php
 imports:
     - { resource: config.yml }
 

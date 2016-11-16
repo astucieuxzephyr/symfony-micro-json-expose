@@ -1,0 +1,28 @@
+# This file has to be loaded in config.yml
+#
+
+# Default Configuration for Ma27ApiKeyAuthenticationBundle
+ma27_api_key_authentication:
+    user:
+        api_key_length:       200
+        object_manager:       ~ # Required
+        model_name:           AppBundle\Entity\User
+        password:
+            strategy:             ~ # Required
+            phpass_iteration_length:  8 # only needed for the PHPass strategy
+    api_key_purge:
+        enabled:              false
+        log_state:            false
+        logger_service:       logger
+        last_action_listener:
+            enabled:              true
+    services:
+        auth_handler:         null
+        key_factory:          null
+        password_hasher:      null
+    # Nom par défaut de la clé utilisée pour le header
+    # Exemple d'utilisation dans le header : 'X-API-KEY : la_cle_api'
+    key_header:           X-API-KEY
+    response:
+        api_key_property:     apiKey
+        error_property:       message

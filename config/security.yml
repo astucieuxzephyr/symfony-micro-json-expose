@@ -1,0 +1,35 @@
+# config/security.yml
+
+access_control:
+    - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+
+# In order to protect some routes using the api key authenticator
+# We don't need ay user provider, so we just adjust an empty memory provider.
+providers:
+    in_memory:
+        memory: ~
+firewalls:
+    default:
+        # In that configuration we protected all routes with the url prefix /restricted
+        # L'autenticator est stateless : ceci implique que l'authentification sera activée quel que soit l'état de la session (loggué ou pas)
+        pattern:   ^/restricted
+        stateless: true
+        simple_preauth:
+            authenticator: ma27_api_key_authentication.security.authenticator
+
+    login:
+        pattern:  ^/api/login
+        stateless: true
+        anonymous: true
+        form_login:
+            # the api/login_check is where Symfony runs the logic to identify the user
+            check_path:               /api/login_check
+            success_handler:          lexik_jwt_authentication.handler.authentication_success
+            failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+            require_previous_session: false
+
+    api:
+        pattern:   ^/api
+        stateless: true
+        lexik_jwt: ~
