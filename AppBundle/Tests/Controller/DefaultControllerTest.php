@@ -17,4 +17,13 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
+
+    /*public function testJson()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/json/example');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }*/
 }
