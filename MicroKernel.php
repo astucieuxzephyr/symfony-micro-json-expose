@@ -6,6 +6,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
 /**
  * @author Koen Vinken <vinkenkoen@gmail.com>
  * Cette classe doit contenir 3 fonctions :
@@ -58,6 +60,7 @@ class MicroKernel extends Kernel
      */
     protected function configureRoutes(RouteCollectionBuilder $routes)
     {
+        // import the WebProfilerRoutes, only if the bundle is enabled
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $routes->mount('/_wdt', $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml'));
             $routes->mount(
@@ -66,6 +69,7 @@ class MicroKernel extends Kernel
             );
         }
 
+        // load the annotation routes
         $routes->mount('/', $routes->import('@AppBundle/Controller', 'annotation'));
         // $routes->import(__DIR__.'/../src/AppBundle/Controller', '/', 'annotation');
 
@@ -87,6 +91,31 @@ class MicroKernel extends Kernel
 
         // $loader->load(__DIR__.'/config/services.yml'); // if you want to add services
 
+        // configure WebProfilerBundle only if the bundle is enabled
+        if (isset($this->bundles['WebProfilerBundle'])) {
+            $c->loadFromExtension('web_profiler', array(
+                'toolbar' => true,
+                'intercept_redirects' => false,
+            ));
+        }
+    }
+
+    public function getRootDir()
+    {
+        return __DIR__;
+    }
+
+    /*
+    // To use the SF3 structure, replace 'app' by 'var' in the following functions
+    */
+    public function getCacheDir()
+    {
+        return dirname(__DIR__).'/app/cache/'.$this->getEnvironment();
+    }
+
+    public function getLogDir()
+    {
+        return dirname(__DIR__).'/app/logs/'.$this->getEnvironment();
     }
 
     public function helloSymfony($version)

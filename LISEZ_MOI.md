@@ -1,34 +1,17 @@
 
-# ==== SfMicro 3.0 app for exposing JSON data ====
-Author : Tanguy Bodin-Hullin
+# SfMicro 3.0 app for exposing JSON data
+- Author : Tanguy Bodin-Hullin
 
 ## Introduction :
-Symfony 2.8 a introduit un nouveau trait appelé *microkernel*
+*Symfony 2.8* a introduit un nouveau trait appelé *microkernel*
 qui permet de simplifier grandement la création de petites applications Symfony
 C'est cette fonctionnalité qui est ici utilisée pour exposer de simples données en JSON.
 
 Notre objectif était ici d'ajouter une couche de sécurité permettant une récupération sécurisée de ces données.
-La couche de sécurité choisie ici est le standard JWT
+La couche de sécurité choisie ici est le *standard JWT (Json Web Token)*
+Pour implémenter cette couche, l'idée est d'utiliser LexikJWTAuthenticationBundle
 
-
-
-## Pour rappel
-j'ai installé deux bundles pour tenter d'ajouter une clé / token sur l'API JSON...
-- LexikJWTAuthenticationBundle
-- Ma27ApiKeyAuthenticationBundle
-
-# Rappel des commandes utilisées pour installer les bundles de sécurité :
-- composer require symfony/security
-- composer require lexik/jwt-authentication-bundle
-- composer require ma27/api-key-authentication-bundle
-
-Voir le fichier MicroKernel.php où ces bundles sont instanciés *OU PAS*
-ainsi que :
-- config/config.yml
-- parameters.yml
-- config/security.yml
-
-
+Une autre couche de sécurité qui pourrait être utilisée serait le Ma27ApiKeyAuthenticationBundle
 
 ## Rappel technique sur les jetons JWT (JSON Web Token)
 
@@ -93,21 +76,22 @@ GET /api/restricted/accounts
 
 ## Utilisation
 
-### Exemple pour accéder à l'appli sur localhost (en mode dev) :
-http://symfonymicro/app_dev.php/json/example
+### Pour accéder à l'exemple sur localhost (en mode dev) :
+http://symfonymicro/app_dev.php/api/example
 
-### Exemple en mode prod :
-http://symfonymicro/app.php/json/example
+Pour accéder à l'exemple (en mode prod)
+http://symfonymicro/app.php/api/example
 
 
 ## Optionnel : Utilisation du bundle ma27/api-key-authentication-bundle
+*ATTENTION  : l'implémentation avec ce bundle n'est pas fonctionnelle pour le moment !!*
  - 1) Il faut décommenter la ligne d'import du bundle dans la fonction registerBundles
 du fichier /MicroKernel.php
  - 2) Le fichier de config de ce bundle a été appelé params_ma27apikeyauthentication.yml
 Cette configuration doit être importée dans la config standard (config.yml).
 Une ligne d'import a été ajoutée. Il suffit de décommenter cette ligne dans le fichier config.yml
 
-___
+
 ## Description :
 
 - Le controleur principal est dans AppBundle/Controller/DefaultController.php
@@ -116,8 +100,7 @@ ___
   - /app_dev.php/json/example
 - Le controleur Test situé dans AppBundle/Tests/Controller/DefaultControllerTest.php
 
-___
-## ==== Configuration Apache2 pour projet SymfonyMicro ====
+## Configuration Apache2 pour votre projet SymfonyMicro
 Attention : Bien mettre le dossier *web* comme dossier terminal du DocumentRoot
 
 ### Windows
@@ -147,7 +130,46 @@ Attention : Bien mettre le dossier *web* comme dossier terminal du DocumentRoot
         CustomLog ${APACHE_LOG_DIR}/SymfonyMicro_access.log combined
     </VirtualHost>
 
-## References utiles :
+## D - Etapes permettant de reproduire la création de ce projet
+
+Ces étapes sont détaillées ici pour ceux qui veulent comprendre comment ce projet a été implémenté.
+
+### 1) Créer un projet ikoene/symfony-micro avec [Composer](https://getcomposer.org/).
+
+```bash
+composer create-project ikoene/symfony-micro
+```
+
+### 2) Ajouter les bundles correspondant à la couche de sécurité
+
+D'abord, il faut ajouter
+- *symfony/security* bundle
+
+Puis vous devez choisir et installer l'un des bundles suivants pour implémener la sécurité de vos données JSON
+- soit *LexikJWTAuthenticationBundle* (pour l'authentification par jeton JWT)
+- soit *Ma27ApiKeyAuthenticationBundle* (pas encore terminé ...)
+
+Voici les commandes utilisées pour installer les bundles de sécurité
+```` bash
+$ composer require symfony/security
+$ composer require lexik/jwt-authentication-bundle
+$ composer require ma27/api-key-authentication-bundle
+````
+
+- Il faut ensuite ajouter les bundles voulus dans le fichier MicroKernel.php
+
+ainsi que pramétrer les fichiers :
+- config/config.yml
+- parameters.yml
+- config/security.yml
+
+
+### 3) Generer les clés pour l'authentification JWT
+
+Voir : https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md
+Les clés doivent être stockées dans /app/var/jwt/ directory
+
+## Références utiles :
 
 ### A - Symfony MicroFramework
 - http://symfony.com/blog/new-in-symfony-2-8-symfony-as-a-microframework"
@@ -158,3 +180,6 @@ Attention : Bien mettre le dossier *web* comme dossier terminal du DocumentRoot
 
 ### C - JSON Web Token (JWT)
 - http://blog.inovia-conseil.fr/?p=236
+
+### D - Créer une API REST avec Symfony
+- https://zestedesavoir.com/tutoriels/1280/creez-une-api-rest-avec-symfony-3/amelioration-de-lapi-rest/securisation-de-lapi-2-2/

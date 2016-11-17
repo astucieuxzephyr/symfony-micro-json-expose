@@ -29,6 +29,7 @@ _______________
 ### Symfony MicroKernelTrait
 
 The **MicroKernelTrait** allows you to create a fully-functional Symfony application in as little as one file. It allows you to start with a tiny application, and then add features and structure as you need to. Its goal to give you the power to choose your bundles and structure.
+It is based on \Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait
 
 ### JSON Web Token (JWT)
 
@@ -50,16 +51,49 @@ These keys must first be generated and put in the /var/jwt/ path
 ## C - Basic Usage
 
 Once installed, go to the URL
-- */app_dev/json/example* to see the JSON exposed.
+- */app_dev/api/example* to see the JSON exposed.
 
+### Configuration Apache2 pour votre projet SymfonyMicro
+Attention : Bien mettre le dossier *web* comme dossier terminal du DocumentRoot
 
+#### Windows
+
+``` xml
+    <VirtualHost SymfonyMicro>
+        ServerAdmin tanguybh2@hotmail.com
+        DocumentRoot "C:/wamp/www/sfmicro/web"
+        ServerName SymfonyMicro
+    	RewriteEngine On
+        RewriteCond %{HTTP:Authorization} ^(.*)
+        RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+        ErrorLog "logs/SymfonyMicro-error.log"
+        CustomLog "logs/SymfonyMicro-access.log" common
+    </VirtualHost>
+```
+
+#### Linux (Ubuntu for Windows)
+
+``` xml
+    <VirtualHost *:80>
+        ServerAdmin tanguybh2@hotmail.com
+        DocumentRoot /mnt/c/wamp/www/sfmicro/web
+        ServerName symfonymicro
+
+        RewriteEngine On
+        RewriteCond %{HTTP:Authorization} ^(.*)
+        RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+        ErrorLog ${APACHE_LOG_DIR}/SymfonyMicro_error.log
+        CustomLog ${APACHE_LOG_DIR}/SymfonyMicro_access.log combined
+    </VirtualHost>
+```
 
 ## D - Steps followed to create this project
 These steps are detailed here for those who want to learn how this project was implemented.
 
 ### 1) Create a new symfony-micro project with [Composer](https://getcomposer.org/).
 
-```bash
+``` bash
 composer create-project ikoene/symfony-micro
 ```
 
@@ -71,6 +105,13 @@ First you need to add the
 Then you need to choose and install one of the following bundles to implement the security :
 - either *LexikJWTAuthenticationBundle* (for JWT authentication)
 - or *Ma27ApiKeyAuthenticationBundle* (this is not finished for the moment ...)
+
+Here is the comand line to use :
+```` bash
+$ composer require symfony/security
+$ composer require lexik/jwt-authentication-bundle
+$ composer require ma27/api-key-authentication-bundle
+````
 
 ### 3) Generate the Keys for JWT authentication
 
@@ -88,3 +129,17 @@ The generated keys must be stored in /app/var/jwt/ directory
 
 ### 3) JSON Web Token (JWT)
 - http://blog.inovia-conseil.fr/?p=236 (in french)
+
+## F - Known Issues
+
+*TODO*
+
+## License & Author
+
+- Author: Tanguy Bodin-Hullin ([tanguybh2 at hotmail.com](mailto:tanguybh2@hotmail.com))
+
+*TODO*
+
+```text
+
+```
